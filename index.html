@@ -14,8 +14,8 @@
         <img ng-hide="hide_wave_image" class="wave_image" src={{wave_image}} </img>
         <img ng-hide="hide_talking_teacher" class="talking_teacher_main" src={{talkingImage}} </img>
         <img ng-hide="hide_second_teacher" class="talking_second_teacher" src={{second_teacher}} </img>
-        <img ng-hide="hide_record_play_button" ng-click="startRecord()" class="record_play_button" src="{{play_button}}" </img>
-        <img ng-hide="hide_record_stop_button" ng-click="stopRecord()" class="record_stop_button" src="{{stop_button}}" </img>
+        <img ng-hide="hide_record_play_button" ng-click="startRecord()" class="record_play_button blink-image" src="{{play_button}}" </img>
+        <img ng-hide="hide_record_stop_button" ng-click="stopRecord()" class="record_stop_button blink-image" src="{{stop_button}}" </img>
         <textarea class="recored_input_are" ng-model="recorded_value" ng-hide="hide_text_area">
         </textarea>
         <div class="center-con" ng-hide="hide_starting_page" ng-click="start()">
@@ -51,6 +51,18 @@
                         <td>{{pre_position}}</td>
                     </tr>
                 </tbody>
+            </table>
+        </div>
+        <div>
+            <table cellpadding="0" cellspacing="0" class="translated_table" ng-hide="hide_translated_tables">
+                <tr>
+                    <th>Your Words</th>
+                    <td>{{translate_input_subwords}}</td>
+                </tr>
+                <tr>
+                    <th>Translated Words</th>
+                    <td>{{translate_output_subwords}}</td>
+                </tr>
             </table>
         </div>
     </div>
