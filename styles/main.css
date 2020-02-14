@@ -1,0 +1,233 @@
+        /* body {
+                background-color: #B3E8B3;
+            } */
+        
+        .talking_teacher_main {
+            position: absolute;
+            left: 40%;
+        }
+        
+        .record_play_button {
+            float: right;
+            right: 47%;
+            width: 10%;
+            position: absolute;
+            top: 40%;
+        }
+        
+        .record_stop_button {
+            float: right;
+            right: 47%;
+            width: 10%;
+            position: absolute;
+            top: 40%;
+        }
+        
+        .recored_input_are {
+            overflow: auto;
+            float: right;
+            position: absolute;
+            right: 36%;
+            top: 70%;
+        }
+        
+        .wave_image {
+            position: absolute;
+            left: 30%;
+        }
+        
+        .recorded_text {
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-weight: 400;
+            color: black;
+            margin: 10px 0;
+            position: relative;
+            text-align: center;
+        }
+        
+        .diksha_image {
+            position: absolute;
+            left: 40%;
+            margin-top: 10%;
+        }
+        
+        textarea {
+            /* margin-top: 10px;
+                margin-left: 50px; */
+            width: 400px;
+            height: 100px;
+            -moz-border-bottom-colors: none;
+            -moz-border-left-colors: none;
+            -moz-border-right-colors: none;
+            -moz-border-top-colors: none;
+            background: none repeat scroll 0 0 rgba(0, 0, 0, 0.07);
+            border-color: -moz-use-text-color #FFFFFF #FFFFFF -moz-use-text-color;
+            border-image: none;
+            border-radius: 6px 6px 6px 6px;
+            border-style: none solid solid none;
+            border-width: medium 1px 1px medium;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12) inset;
+            color: #555555;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 1em;
+            line-height: 1.4em;
+            padding: 5px 8px;
+            transition: background-color 0.2s ease 0s;
+        }
+        
+        body {
+            background: white;
+            font-family: Arial, Helvetica;
+            font-size: 12px;
+            color: #fff;
+        }
+        
+        footer {
+            position: fixed;
+            bottom: 20px;
+            font-family: Arial, Helvetica;
+            font-size: 12px;
+            color: #fff;
+        }
+        
+        footer img {
+            margin-left: 20px;
+        }
+        
+        footer span {
+            position: relative;
+            bottom: 4px;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #ffff;
+        }
+        
+        .center-con {
+            position: absolute;
+            top: 20%;
+            left: 49%;
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .round {
+            position: absolute;
+            border: 2px solid black;
+            width: 40px;
+            height: 40px;
+            border-radius: 100%;
+        }
+        
+        #cta {
+            width: 100%;
+            cursor: pointer;
+            position: absolute;
+        }
+        
+        #cta .arrow {
+            left: 30%;
+        }
+        
+        .arrow {
+            position: absolute;
+            bottom: 0;
+            margin-left: 0px;
+            width: 12px;
+            height: 12px;
+            background-size: contain;
+            top: 15px;
+        }
+        
+        .segunda {
+            margin-left: 8px;
+        }
+        
+        .next {
+            background-image: url(https://cdn0.iconfinder.com/data/icons/website-kit-2/512/icon_403-512.png);
+        }
+        
+        @keyframes bounceAlpha {
+            0% {
+                opacity: 1;
+                transform: translateX(0px) scale(1);
+            }
+            25% {
+                opacity: 0;
+                transform: translateX(10px) scale(0.9);
+            }
+            26% {
+                opacity: 0;
+                transform: translateX(-10px) scale(0.9);
+            }
+            55% {
+                opacity: 1;
+                transform: translateX(0px) scale(1);
+            }
+        }
+        
+        .bounceAlpha {
+            animation-name: bounceAlpha;
+            animation-duration: 1.4s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        
+        .arrow.primera.bounceAlpha {
+            animation-name: bounceAlpha;
+            animation-duration: 1.4s;
+            animation-delay: 0.2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        
+        .round .arrow {
+            animation-name: bounceAlpha;
+            animation-duration: 1.4s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        
+        .round .arrow.primera {
+            animation-name: bounceAlpha;
+            animation-duration: 1.4s;
+            animation-delay: 0.2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        
+        .lets_go_text {
+            color: black;
+            left: 47%;
+            top: 75%;
+            position: absolute;
+        }
+        
+        .nouns_column {
+            left: 35%;
+            bottom: 60%;
+        }
+        
+        .preposition_column {
+            left: 56%;
+            bottom: 60%;
+            position: absolute;
+        }
+        
+        table {
+            color: black;
+            width: 10%;
+            position: absolute;
+            border-collapse: collapse;
+            width: 15%;
+        }
+        
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
