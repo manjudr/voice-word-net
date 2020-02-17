@@ -132,17 +132,22 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                 console.log("response is" + JSON.stringify(response))
                 if (response.result.text_complexity.top5) {
                     $scope.nounsAre = response.result.text_complexity.top5.noun
+                    var example = []
                     $scope.searchNouns($scope.nounsAre, function(response) {
                         if (response.result.count > 0) {
                             response.result.words.forEach(element => {
+                                // if (element.exampleSentences != undefined) {
+                                //     example =
+                                // }
                                 $scope.getSynonyms(element.synonyms, function(response) {
                                     if (response != undefined) {
                                         var synonyms = {
                                             key: element.lemma,
-                                            synonyms: $scope.getAsList(response.synonyms),
-                                            holonyms: $scope.getAsList(response.holonyms),
+                                            synonyms: $scope.getAsList(response, "synonyms"),
+                                            holonyms: $scope.getAsList(response, "holonyms"),
                                             picture: element.pictures,
-                                            meaning: element.meaning
+                                            meaning: element.meaning,
+                                            example: (element.exampleSentences) && element.exampleSentences[0]
                                         }
                                         $scope.word_list.push(synonyms)
                                     }
@@ -166,7 +171,10 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                         $scope.hide_pre_positions_tables = false
                     }
                     console.log("Nouns List is " + JSON.stringify($scope.nounsAre))
-                    $scope.safeApply()
+                    setTimeout(function() {
+                        $scope.safeApply()
+                            //$scope.textToSpeech($scope.getMeSentance())
+                    }, 2000)
                 } else {
                     $scope.safeApply()
                     alert("I'm Sorry.. I couldn't able to get the nouns for you, Please try again")
@@ -281,8 +289,19 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
         })
     }
 
-    $scope.getAsList = function() {
-        return ["manju", "raju"]
+    $scope.getAsList = function(request, type) {
+        console.log("words are" + JSON.stringify(request))
+        var names = []
+        request.forEach(element => {
+            if (element.Synset[type] != undefined && element.Synset[type].length > 0) {
+                element.Synset[type].forEach(key => {
+                    names.push(key.name)
+                })
+            }
+        })
+        return names.splice(0, 3).toString()
     }
+
+
 
 });

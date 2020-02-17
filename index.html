@@ -41,72 +41,6 @@
         <div class="lets_go_text" ng-hide="hide_starting_page">
             <p>Let's go..</p>
         </div>
-        <!-- <div>
-            <table cellpadding="0" cellspacing="0" class="nouns_column" ng-hide="hide_nouns_tables">
-                <tr>
-                    <th>Nouns</th>
-                    <th>Synonyms</th>
-                    <th>Holonyms</th>
-                </tr>
-                <tbody ng-repeat="element in word_list">
-                    <tr>
-                        <td>{{element.key}}</td>
-                        <td>{{element.holonyms}}</td>
-                        <td>{{element.synonyms}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div> -->
-        <!-- <div>
-            <table cellpadding="0" cellspacing="0" class="preposition_column" ng-hide="hide_pre_positions_tables">
-                <tr>
-                    <th>PrePositions</th>
-                </tr>
-                <tbody ng-repeat="pre_position in prepositions">
-                    <tr>
-                        <td>{{pre_position}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div> -->
-        <!-- <div>
-            <table cellpadding="0" cellspacing="0" class="synonms_column" ng-hide="hide_synonmus_tables">
-                <th>Word</th>
-                <th>Synonyms</th>
-                <tbody ng-repeat="pre_position in prepositions">
-                    <tr>
-                        <td>{{pre_position}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div> -->
-        <!-- <div>
-            <table cellpadding="0" cellspacing="0" class="translated_table" ng-hide="hide_translated_tables">
-                <tr>
-                    <th>Your Words</th>
-                    <td>{{translate_input_subwords}}</td>
-                </tr>
-                <tr>
-                    <th>Translated Words</th>
-                    <td>{{translate_output_subwords}}</td>
-                </tr>
-            </table>
-        </div> -->
-
-        <!-- <div class="thumbline_align">
-            <div class="gallery">
-                <div class="images">
-                </div>
-                <div class="thumbs">
-                    <div ng-hide="hide_thumbnail" ng-repeat="item in search_word_thumbnails track by $index" class=" thumb tooltip" style="background-image: url({{item.pictures[0]}});border-style: double;border-color: black; ">
-                        <p class="thumbline_text">
-                            {{item.lemma}}
-                        </p>
-                        <span class="tooltiptext">{{item.meaning || "Description not found"}}</span>
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <div ng-hide="hide_nouns_tables" class="main_table" style="position: fixed;left: 25%;overflow-y:auto;height: 48%;bottom: 40%;">
             <div class="table-users">
                 <div class="header">Words net</div>
@@ -115,18 +49,20 @@
                     <tr>
                         <th>Image</th>
                         <th>Noun</th>
-                        <th>Synonyms</th>
-                        <th>Holonyms</th>
                         <th width="230">Description</th>
+                        <th width="230">Synonyms & Holonyms</th>
+                        <th width="230">Examples</th>
                     </tr>
                     <tbody ng-repeat="element in word_list">
                         {{element}}
                         <tr>
                             <td><img class="table_img" src={{element.picture[0]}} alt="" /></td>
                             <td>{{element.key}}</td>
-                            <td>{{element.holonyms}}</td>
-                            <td>{{element.synonyms}}</td>
                             <td>{{element.meaning}}</td>
+                            <td>["Synonyms:" {{element.synonyms}}] ["Holonyms":{{element.holonyms}}]
+                            </td>
+                            <td>{{element.example}}</td>
+
                         </tr>
                     </tbody>
                 </table>
