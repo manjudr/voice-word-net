@@ -1,4 +1,4 @@
-var app = angular.module('myApp', []);
+var app = angular.module('myApp', ['ui.bootstrap']);
 app.controller('myCtrl', function($scope, $rootScope, $http) {
     $scope.wave_image = "./assets/digital_audio_1.gif"
     $scope.talkingImage = "./assets/talking_teacher_3.gif"
@@ -17,13 +17,23 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
     $scope.hide_nouns_tables = true
     $scope.hide_pre_positions_tables = true
     $scope.hide_translated_tables = true
+    $scope.hide_thumbnail = true
     $scope.nounsAre = []
     $scope.prepositions = []
     $scope.antonymsAre = []
     $scope.synonyms = []
     $scope.recorded_value = ""
-    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-    $scope.recognition = new window.SpeechRecognition();
+
+    $scope.search_word_result = []
+        //$scope.search_word_thumbnails = [{ pictures: ["assets/03.jpg"], lemma: "jlfds" }, { pictures: ["assets/02.jpg"], lemma: "rewr" }]
+    $scope.search_word_thumbnails = []
+    window.speechRecognition = window.speechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.webkitSpeechRecognition;
+
+
+    if (window.speechRecognition == undefined) {
+        alert("Speech Recogniztion API Not Supported");
+    }
+    $scope.recognition = new window.speechRecognition();
 
 
     $scope.translate_input_subwords = ""
@@ -34,7 +44,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
         console.log("yes")
         var msg = new SpeechSynthesisUtterance();
         var voices = window.speechSynthesis.getVoices();
-        msg.voice = voices[30];
+        msg.voice = voices[3];
         msg.rate = 1
         msg.pitch = 1
         msg.text = message;
@@ -119,11 +129,24 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                 console.log("response is" + JSON.stringify(response))
                 if (response.result.text_complexity.top5) {
                     $scope.nounsAre = response.result.text_complexity.top5.noun
+                    $scope.searchNouns($scope.nounsAre, function(response) {
+                        if (response.result.count > 0) {
+                            response.result.words.forEach(element => {
+                                if (element.pictures != undefined) {
+                                    console.log("element" + element)
+                                    $scope.search_word_thumbnails.push(element)
+                                }
+                            })
+                            $scope.search_word_result = response.result.words
+                            $scope.hide_thumbnail = false
+                        }
+                        console.log("text search result is " + response);
+                    })
                     $scope.prepositions = response.result.text_complexity.top5.preposition
-                    if ($scope.nounsAre.length != 0) {
+                    if ($scope.nounsAre && $scope.nounsAre.length != 0) {
                         $scope.hide_nouns_tables = false
                     }
-                    if ($scope.prepositions.length != 0) {
+                    if ($scope.prepositions && $scope.prepositions.length != 0) {
                         $scope.hide_pre_positions_tables = false
                     }
                     console.log("Nouns List is " + JSON.stringify($scope.nounsAre))
@@ -177,8 +200,51 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
         $scope.hide_talking_teacher = false
         setTimeout(function() {
             $scope.textToSpeech("hello, how are you")
-                //$scope.textToSpeech("Hello!!! Welcome to devcon event!!  Hope you have came here to learn about the antonyms and synonyms, Now I would request you to read something then i will find antonyms and synonyms for you!")
+                // $scope.textToSpeech("Hello!!! Welcome to devcon event!!  Hope you have came here to learn about the antonyms and synonyms, Now I would request you to read something then i will find antonyms and synonyms for you!")
         }, 100)
     }
 
+    $scope.searchNouns = function(nouns, cb) {
+        var nounsList = undefined
+        if (nouns != undefined) {
+            nounsList = JSON.stringify(nouns)
+        }
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "https://api.ekstep.in/language/v3/search",
+            "method": "POST",
+            "headers": {
+                "content-type": "application/json",
+                "user-id": "ilimi",
+                "accept-encoding": "UTF-8",
+                "accept-charset": "UTF-8",
+                "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIyNDUzMTBhZTFlMzc0NzU1ODMxZTExZmQyMGRjMDg0MiIsImlhdCI6bnVsbCwiZXhwIjpudWxsLCJhdWQiOiIiLCJzdWIiOiIifQ.M1H_Z7WvwRPM0suBCofHs7iuDMMHyBjIRd3xGS4hqy8",
+                "cache-control": "no-cache",
+                "postman-token": "26a73f06-26be-d070-139a-0534e0d3ba9a"
+            },
+            "processData": false,
+            "data": `{"request":{"filters":{"lemma":${nounsList},"objectType":["Word"],"language_id":["en"]}}}`
+        }
+        console.log("settings" + JSON.stringify(settings))
+        $.ajax(settings).done(function(response) {
+            cb && cb(response)
+        });
+    }
+
+});
+app.directive('audios', function($sce) {
+    return {
+        restrict: 'A',
+        scope: { code: '=' },
+        replace: true,
+        template: '<audio ng-src="{{url}}" controls></audio>',
+        link: function(scope) {
+            scope.$watch('code', function(newVal, oldVal) {
+                if (newVal !== undefined) {
+                    scope.url = $sce.trustAsResourceUrl("/data/media/" + newVal);
+                }
+            });
+        }
+    };
 });
