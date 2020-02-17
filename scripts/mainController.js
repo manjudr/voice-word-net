@@ -83,7 +83,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                 "user-id": "ilimi",
                 "accept-encoding": "UTF-8",
                 "accept-charset": "UTF-8",
-                "authorization": "",
+                "authorization": appConfig.key,
                 "cache-control": "no-cache",
                 "postman-token": "9e2d700f-b653-af17-58d9-0f926a9407aa"
             },
@@ -224,7 +224,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                 "user-id": "ilimi",
                 "accept-encoding": "UTF-8",
                 "accept-charset": "UTF-8",
-                "authorization": "",
+                "authorization": appConfig.key,
                 "cache-control": "no-cache",
                 "postman-token": "26a73f06-26be-d070-139a-0534e0d3ba9a"
             },
@@ -248,7 +248,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                 "user-id": "ilimi",
                 "accept-encoding": "UTF-8",
                 "accept-charset": "UTF-8",
-                "authorization": "",
+                "authorization": appConfig.key,
                 "cache-control": "no-cache",
                 "postman-token": "bad884b9-6532-b5c9-1a78-288152fd9f62"
             }
