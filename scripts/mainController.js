@@ -23,7 +23,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
     $scope.nounsAre = []
     $scope.prepositions = []
     $scope.antonymsAre = []
-    $scope.synonyms = []
+    $scope.word_list = []
     $scope.recorded_value = ""
 
     $scope.search_word_result = []
@@ -135,6 +135,19 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                     $scope.searchNouns($scope.nounsAre, function(response) {
                         if (response.result.count > 0) {
                             response.result.words.forEach(element => {
+                                $scope.getSynonyms(element.synonyms, function(response) {
+                                    if (response != undefined) {
+                                        var synonyms = {
+                                            key: element.lemma,
+                                            synonyms: $scope.getAsList(response.synonyms),
+                                            holonyms: $scope.getAsList(response.holonyms),
+                                            picture: element.pictures,
+                                            meaning: element.meaning
+                                        }
+                                        $scope.word_list.push(synonyms)
+                                    }
+                                    console.log("wordList" + JSON.stringify($scope.word_list))
+                                })
                                 if (element.pictures != undefined) {
                                     console.log("element" + element)
                                     $scope.search_word_thumbnails.push(element)
@@ -153,6 +166,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                         $scope.hide_pre_positions_tables = false
                     }
                     console.log("Nouns List is " + JSON.stringify($scope.nounsAre))
+                    $scope.safeApply()
                 } else {
                     $scope.safeApply()
                     alert("I'm Sorry.. I couldn't able to get the nouns for you, Please try again")
@@ -237,27 +251,38 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
         });
     }
 
-    $scope.getSynonyms = function(wordId) {
-        var settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": "https://api.ekstep.in/language/v3/synsets/read/110012375?language_id=en",
-            "method": "GET",
-            "headers": {
-                "content-type": "application/json",
-                "user-id": "ilimi",
-                "accept-encoding": "UTF-8",
-                "accept-charset": "UTF-8",
-                "authorization": appConfig.key,
-                "cache-control": "no-cache",
-                "postman-token": "bad884b9-6532-b5c9-1a78-288152fd9f62"
+    $scope.getSynonyms = function(wordIds, cb) {
+        var res = []
+        var count = 0
+        wordIds.forEach(id => {
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": `https://api.ekstep.in/language/v3/synsets/read/${id}?language_id=en`,
+                "method": "GET",
+                "headers": {
+                    "content-type": "application/json",
+                    "user-id": "ilimi",
+                    "accept-encoding": "UTF-8",
+                    "accept-charset": "UTF-8",
+                    "authorization": appConfig.key,
+                    "cache-control": "no-cache",
+                    "postman-token": "bad884b9-6532-b5c9-1a78-288152fd9f62"
+                }
             }
-        }
-
-        $.ajax(settings).done(function(response) {
-            console.log(response);
-        });
+            $.ajax(settings).done(function(response) {
+                console.log(response);
+                res.push(response.result)
+                count++
+                if (count === wordIds.length) {
+                    cb(res)
+                }
+            });
+        })
     }
 
+    $scope.getAsList = function() {
+        return ["manju", "raju"]
+    }
 
 });
