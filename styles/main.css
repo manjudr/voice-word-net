@@ -12,7 +12,7 @@
             right: 47%;
             width: 10%;
             position: absolute;
-            top: 40%;
+            top: 20%;
         }
         
         .record_stop_button {
@@ -20,7 +20,7 @@
             right: 47%;
             width: 10%;
             position: absolute;
-            top: 40%;
+            top: 20%;
         }
         
         .recored_input_are {
@@ -28,12 +28,13 @@
             float: right;
             position: absolute;
             right: 36%;
-            top: 70%;
+            top: 55%;
         }
         
         .wave_image {
             position: absolute;
             left: 30%;
+            top: 70%
         }
         
         .recorded_text {
@@ -48,7 +49,7 @@
         .diksha_image {
             position: absolute;
             left: 40%;
-            margin-top: 10%;
+            margin-top: 20%;
         }
         
         textarea {
@@ -79,7 +80,7 @@
             background: white;
             font-family: Arial, Helvetica;
             font-size: 12px;
-            color: #fff;
+            color: black;
         }
         
         footer {
@@ -106,7 +107,7 @@
         
         .center-con {
             position: absolute;
-            top: 20%;
+            top: 10%;
             left: 49%;
             display: flex;
             height: 100vh;
@@ -129,7 +130,11 @@
         }
         
         #cta .arrow {
-            left: 30%;
+            left: 21%;
+        }
+        
+        .class_board {
+            float: right;
         }
         
         .arrow {
@@ -202,24 +207,24 @@
         .lets_go_text {
             color: black;
             left: 47%;
-            top: 75%;
+            top: 65%;
             position: absolute;
         }
         
         .nouns_column {
-            left: 35%;
+            left: 25%;
             bottom: 60%;
         }
         
         .preposition_column {
-            left: 56%;
-            bottom: 60%;
+            left: 44%;
+            bottom: 64%;
             position: absolute;
         }
         
         .translated_table {
             width: 30%;
-            left: 70%;
+            left: 63%;
             bottom: 60%;
             position: absolute;
         }
@@ -337,4 +342,18 @@
         
         .tooltip:hover .tooltiptext {
             visibility: visible;
+        }
+        
+        .container {
+            position: relative;
+            text-align: center;
+            color: black;
+            float: right;
+        }
+        
+        .centered {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }

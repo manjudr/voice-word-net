@@ -5,7 +5,8 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
     $scope.second_teacher = "./assets/talking_teacher_2.gif"
     $scope.play_button = "./assets/play-button.png"
     $scope.stop_button = "./assets/stop-button.png"
-    $scope.dikshaImage = "./assets/logo.jpeg"
+    $scope.dikshaImage = "./assets/sunbird_logo.png"
+    $scope.board_image = "./assets/blackboard.png"
     $scope.hide_starting_page = false
     $scope.hide_talking_teacher = true
     $scope.hide_second_teacher = true
@@ -14,6 +15,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
     $scope.hide_recorded_text = true
     $scope.hide_wave_image = true
     $scope.hide_text_area = true
+    $scope.hide_board_image = true
     $scope.hide_nouns_tables = true
     $scope.hide_pre_positions_tables = true
     $scope.hide_translated_tables = true
@@ -53,6 +55,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
             $scope.hide_talking_teacher = true;
             $scope.hide_record_play_button = false
             $scope.hide_text_area = false
+            $scope.hide_board_image = false
             $scope.safeApply()
         };
         speechSynthesis.speak(msg);
@@ -80,7 +83,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                 "user-id": "ilimi",
                 "accept-encoding": "UTF-8",
                 "accept-charset": "UTF-8",
-                "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIyNDUzMTBhZTFlMzc0NzU1ODMxZTExZmQyMGRjMDg0MiIsImlhdCI6bnVsbCwiZXhwIjpudWxsLCJhdWQiOiIiLCJzdWIiOiIifQ.M1H_Z7WvwRPM0suBCofHs7iuDMMHyBjIRd3xGS4hqy8",
+                "authorization": "",
                 "cache-control": "no-cache",
                 "postman-token": "9e2d700f-b653-af17-58d9-0f926a9407aa"
             },
@@ -159,6 +162,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
             $scope.hide_record_play_button = true;
             $scope.hide_second_teacher = false
             $scope.hide_text_area = true
+            $scope.hide_board_image = true
             $scope.hide_recorded_text = false
             $scope.hide_wave_image = true
         } else {
@@ -198,6 +202,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
     $scope.start = function() {
         $scope.hide_starting_page = true
         $scope.hide_talking_teacher = false
+        $scope.hide_board_image = false
         setTimeout(function() {
             $scope.textToSpeech("hello, how are you")
                 // $scope.textToSpeech("Hello!!! Welcome to devcon event!!  Hope you have came here to learn about the antonyms and synonyms, Now I would request you to read something then i will find antonyms and synonyms for you!")
@@ -219,7 +224,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                 "user-id": "ilimi",
                 "accept-encoding": "UTF-8",
                 "accept-charset": "UTF-8",
-                "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIyNDUzMTBhZTFlMzc0NzU1ODMxZTExZmQyMGRjMDg0MiIsImlhdCI6bnVsbCwiZXhwIjpudWxsLCJhdWQiOiIiLCJzdWIiOiIifQ.M1H_Z7WvwRPM0suBCofHs7iuDMMHyBjIRd3xGS4hqy8",
+                "authorization": "",
                 "cache-control": "no-cache",
                 "postman-token": "26a73f06-26be-d070-139a-0534e0d3ba9a"
             },
@@ -232,19 +237,27 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
         });
     }
 
-});
-app.directive('audios', function($sce) {
-    return {
-        restrict: 'A',
-        scope: { code: '=' },
-        replace: true,
-        template: '<audio ng-src="{{url}}" controls></audio>',
-        link: function(scope) {
-            scope.$watch('code', function(newVal, oldVal) {
-                if (newVal !== undefined) {
-                    scope.url = $sce.trustAsResourceUrl("/data/media/" + newVal);
-                }
-            });
+    $scope.getSynonyms = function(wordId) {
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "https://api.ekstep.in/language/v3/synsets/read/110012375?language_id=en",
+            "method": "GET",
+            "headers": {
+                "content-type": "application/json",
+                "user-id": "ilimi",
+                "accept-encoding": "UTF-8",
+                "accept-charset": "UTF-8",
+                "authorization": "",
+                "cache-control": "no-cache",
+                "postman-token": "bad884b9-6532-b5c9-1a78-288152fd9f62"
+            }
         }
-    };
+
+        $.ajax(settings).done(function(response) {
+            console.log(response);
+        });
+    }
+
+
 });

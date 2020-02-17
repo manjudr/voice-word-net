@@ -20,6 +20,13 @@
         <img ng-hide="hide_second_teacher" class="talking_second_teacher" src={{second_teacher}} </img>
         <img ng-hide="hide_record_play_button" ng-click="startRecord()" class="record_play_button blink-image" src="{{play_button}}" </img>
         <img ng-hide="hide_record_stop_button" ng-click="stopRecord()" class="record_stop_button blink-image" src="{{stop_button}}" </img>
+        <div class="container">
+            <img class="class_board" ng-hide="hide_board_image" src="{{board_image}}" </img>
+
+            <div class="centered" ng-hide="hide_board_image">{{recorded_value}}</div>
+
+        </div>
+
         <textarea class="recored_input_are" ng-model="recorded_value" ng-hide="hide_text_area">
         </textarea>
         <div class="center-con" ng-hide="hide_starting_page" ng-click="start()">
