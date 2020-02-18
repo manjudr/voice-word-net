@@ -43,7 +43,6 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
 
 
     $scope.textToSpeech = function(message) {
-        console.log("yes")
         var msg = new SpeechSynthesisUtterance();
         var voices = window.speechSynthesis.getVoices();
         msg.voice = voices[3];
@@ -51,7 +50,6 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
         msg.pitch = 1
         msg.text = message;
         msg.onend = function(e) {
-            console.log("audio is played")
             $scope.hide_talking_teacher = true;
             $scope.hide_record_play_button = false
             $scope.hide_text_area = false
@@ -90,7 +88,6 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
             "processData": false,
             "data": `{\n  \"request\": {\n    \"language_id\": \"en\",\n    \"text\": \"${message}\"\n  }\n}`
         }
-        console.log("settings" + JSON.stringify(settings))
         $.ajax(settings).done(function(response) {
             cb(response)
         });
@@ -105,7 +102,6 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
             for (var i = event.resultIndex; i < event.results.length; ++i) {
                 if (event.results[i].isFinal) {
                     $scope.recorded_value = $scope.recorded_value.toString().concat(event.results[i][0].transcript)
-                    console.log("Recorded Value is " + $scope.recorded_value)
                     $scope.safeApply()
                 }
             }
@@ -123,58 +119,68 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
             $scope.translate($scope.recorded_value, function(response) {
                 if (response.response_body != undefined) {
                     $scope.hide_translated_tables = false
-                    $scope.translate_input_subwords = response.response_body[0].input_subwords
-                    $scope.translate_output_subwords = response.response_body[0].output_subwords
+                    $scope.translate_input_subwords = response.response_body[0].input_subwords.replace(/[^\w\s]/gi, '')
+                    $scope.translate_output_subwords = response.response_body[0].output_subwords.replace('~[^\p{M}\w]+~u', '');
                     $scope.safeApply()
                 }
             });
             $scope.analyzeMessage($scope.recorded_value, function(response) {
-                console.log("response is" + JSON.stringify(response))
                 if (response.result.text_complexity.top5) {
                     $scope.nounsAre = response.result.text_complexity.top5.noun
-                    var example = []
-                    $scope.searchNouns($scope.nounsAre, function(response) {
-                        if (response.result.count > 0) {
-                            response.result.words.forEach(element => {
-                                // if (element.exampleSentences != undefined) {
-                                //     example =
-                                // }
-                                $scope.getSynonyms(element.synonyms, function(response) {
-                                    if (response != undefined) {
-                                        var synonyms = {
-                                            key: element.lemma,
-                                            synonyms: $scope.getAsList(response, "synonyms"),
-                                            holonyms: $scope.getAsList(response, "holonyms"),
-                                            picture: element.pictures,
-                                            meaning: element.meaning,
-                                            example: (element.exampleSentences) && element.exampleSentences[0]
-                                        }
-                                        $scope.word_list.push(synonyms)
-                                    }
-                                    console.log("wordList" + JSON.stringify($scope.word_list))
-                                })
-                                if (element.pictures != undefined) {
-                                    console.log("element" + element)
-                                    $scope.search_word_thumbnails.push(element)
-                                }
-                            })
-                            $scope.search_word_result = response.result.words
-                            $scope.hide_thumbnail = false
-                        }
-                        console.log("text search result is " + response);
+                    var rhymingList = []
+                    var rhymingObj = {}
+                    $scope.nounsAre.forEach(noun => {
+                        $scope.getRhymingWords(noun, function(rhymingResponse) {
+                            rhymingObj["word"] = noun;
+                            rhymingObj["rhymingsList"] = rhymingResponse
+                            rhymingList.push(rhymingObj)
+                        })
                     })
-                    $scope.prepositions = response.result.text_complexity.top5.preposition
-                    if ($scope.nounsAre && $scope.nounsAre.length != 0) {
-                        $scope.hide_nouns_tables = false
-                    }
-                    if ($scope.prepositions && $scope.prepositions.length != 0) {
-                        $scope.hide_pre_positions_tables = false
-                    }
-                    console.log("Nouns List is " + JSON.stringify($scope.nounsAre))
+
                     setTimeout(function() {
-                        $scope.safeApply()
-                            //$scope.textToSpeech($scope.getMeSentance())
-                    }, 2000)
+                        $scope.searchNouns($scope.nounsAre, function(response) {
+                            if (response.result.count > 0) {
+                                response.result.words.forEach(element => {
+                                    $scope.getSynonyms(element.synonyms, function(synResponse) {
+                                        if (synResponse != undefined) {
+                                            var words_map = {
+                                                key: element.lemma,
+                                                synonyms: $scope.getAsList(synResponse, "synonyms"),
+                                                holonyms: $scope.getAsList(synResponse, "holonyms"),
+                                                picture: element.pictures,
+                                                meaning: element.meaning,
+                                                example: (element.exampleSentences) && element.exampleSentences[0],
+                                                rhymingWords: ""
+                                            }
+                                            console.log("rhymingList" + JSON.stringify(rhymingList))
+                                            rhymingList.forEach(rhyming => {
+                                                if (rhyming.word === words_map["key"]) {
+                                                    words_map.rhymingWords = rhyming["rhymingsList"]
+                                                }
+                                            })
+                                            $scope.word_list.push(words_map)
+                                        }
+
+                                    })
+                                })
+                                $scope.hide_nouns_tables = false
+                            } else {
+                                $scope.hide_nouns_tables = true
+                            }
+                        })
+                        $scope.prepositions = response.result.text_complexity.top5.preposition
+                        if ($scope.nounsAre && $scope.nounsAre.length != 0) {
+
+                        }
+                        if ($scope.prepositions && $scope.prepositions.length != 0) {
+                            $scope.hide_pre_positions_tables = false
+                        }
+                        setTimeout(function() {
+                            $scope.safeApply()
+                        }, 1000)
+
+                    }, 1000)
+
                 } else {
                     $scope.safeApply()
                     alert("I'm Sorry.. I couldn't able to get the nouns for you, Please try again")
@@ -217,7 +223,6 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
             "data": `[\n    {\n        \"src\": \"${message}\",\n        \"id\": 56\n    }\n]`
         }
         $.ajax(settings).done(function(response) {
-            console.log(response);
             cb && cb(response)
         });
     }
@@ -253,7 +258,6 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
             "processData": false,
             "data": `{"request":{"filters":{"lemma":${nounsList},"objectType":["Word"],"language_id":["en"]}}}`
         }
-        console.log("settings" + JSON.stringify(settings))
         $.ajax(settings).done(function(response) {
             cb && cb(response)
         });
@@ -279,7 +283,6 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                 }
             }
             $.ajax(settings).done(function(response) {
-                console.log(response);
                 res.push(response.result)
                 count++
                 if (count === wordIds.length) {
@@ -290,7 +293,6 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
     }
 
     $scope.getAsList = function(request, type) {
-        console.log("words are" + JSON.stringify(request))
         var names = []
         request.forEach(element => {
             if (element.Synset[type] != undefined && element.Synset[type].length > 0) {
@@ -300,6 +302,41 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
             }
         })
         return names.splice(0, 3).toString()
+    }
+
+
+    $scope.getRhymingWords = function(word, cb) {
+        var rhymingWords = []
+        $.ajax({
+            "async": true,
+            "crossDomain": true,
+            "url": "https://api.ekstep.in/language/v3/tools/rhymingwords/list",
+            "method": "POST",
+            "headers": {
+                "content-type": "application/json",
+                "user-id": "rayuluv",
+                "authorization": appConfig.key,
+                "cache-control": "no-cache",
+                "postman-token": "5ab06d4f-b2f5-8a1b-d6be-d271a2f6a408"
+            },
+            "processData": false,
+            "timeout": 2000,
+            "data": `{\n    \"request\": {\n     \"language_id\":\"en\",\n     \"lemma\":\"${word}\"\n    }\n}`,
+            success: function(response, textStatus, jqXHR) {
+                console.log("success" + response)
+                if (response.result != undefined && response.result.words != undefined) {
+                    response.result.words.forEach(word => {
+                        rhymingWords.push(word.lemma)
+                    })
+                    cb(rhymingWords.splice(0, 4).toString())
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log("error" + textStatus)
+                cb("")
+            }
+        });
+
     }
 
 
