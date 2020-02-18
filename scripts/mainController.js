@@ -48,6 +48,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
         var msg = new SpeechSynthesisUtterance();
         var voices = window.speechSynthesis.getVoices();
         msg.voice = voices[48];
+        console.log("voice" + msg.voice)
         msg.rate = 1
         msg.pitch = 1
         msg.text = message;
@@ -60,9 +61,8 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
             $scope.safeApply()
                 // }
         };
+
         speechSynthesis.speak(msg);
-
-
     }
 
     $rootScope.safeApply = function(fn) {
@@ -186,8 +186,12 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                         }
                         setTimeout(function() {
                             $scope.explainTable()
-                            $scope.hide_second_teacher = false
-                            $scope.hide_retry_button = false
+                                // $scope.word_list.forEach(element => {
+                                //     message = message.concat(` The ${element.key} is basically ${element.meaning}`)
+                                //     $scope.explainTable(message)
+                                // })
+                                // $scope.hide_second_teacher = false
+                                // $scope.hide_retry_button = false
                             $scope.safeApply()
 
                         }, 1000)
@@ -244,8 +248,8 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
         $scope.hide_talking_teacher = false
         $scope.hide_board_image = false
         setTimeout(function() {
-            $scope.textToSpeech("hello, how are you", true)
-                // $scope.textToSpeech("Hello!!! Welcome to devcon event!!  Hope you have came here to learn about the antonyms and synonyms, Now I would request you to read something then i will find antonyms and synonyms for you!")
+            //$scope.textToSpeech("hello, how are you", true)
+            $scope.textToSpeech("Hello!!! Welcome to devcon event!!  Hope you have came here to learn about the antonyms and synonyms, Now I would request you to read something then i will find antonyms and synonyms for you!")
         }, 100)
     }
 
@@ -351,21 +355,31 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
         });
 
     }
-    $scope.explainTable = function() {
+    $scope.explainTable = function(message) {
         $scope.hide_second_teacher = false
         var msg = new SpeechSynthesisUtterance();
         var voices = window.speechSynthesis.getVoices();
         msg.voice = voices[48];
         msg.rate = 1
         msg.pitch = 1
-        msg.text = "Hey My dear student! I found therese are result for you.";
+        var message = message || `Hey My dear student! I found these are the results for you!, The words which i got are ${$scope.nounsAre.toString()}, `;
+        // var elementMessage = $scope.word_list.forEach(element => {
+        //     if (element.meaning != undefined) {
+        //         return message.concat(` The ${element.key} is basically ${element.meaning}`)
+        //     }
+
+        // })
+        var elements = $scope.word_list.filter(item => item.meaning != undefined);
+        var firstElement = elements[0] ? elements[0] : { key: "", "meaning": "" }
+        msg.text = message.concat(` The ${firstElement.key} is basically ${firstElement.meaning}`)
+        console.log("mesage" + msg.text)
         speechSynthesis.speak(msg);
         msg.onend = function(e) {
             $scope.hide_second_teacher = true
             $scope.safeApply()
         }
-
     }
+
     $scope.retry = function() {
         console.log("retry")
         $scope.startRecord()
@@ -382,7 +396,5 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
 
 
     }
-
-
-
+    var voices = window.speechSynthesis.getVoices();
 });
