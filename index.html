@@ -15,16 +15,17 @@
 <body>
     <div ng-app="myApp" ng-controller="myCtrl" id="main">
         <img ng-hide="hide_starting_page" src={{dikshaImage}} class="diksha_image"></img>
-        <h3 ng-hide="hide_recorded_text" class="recorded_text">{{recorded_value}}</h3>
+        <h3 ng-hide="hide_recorded_text" class="recorded_text">{{recorded_value | uppercase}}</h3>
         <img ng-hide="hide_wave_image" class="wave_image" src={{wave_image}} </img>
         <img ng-hide="hide_talking_teacher" class="talking_teacher_main" src={{talkingImage}} </img>
         <img ng-hide="hide_second_teacher" class="talking_second_teacher" src={{second_teacher}} </img>
         <img ng-hide="hide_record_play_button" ng-click="startRecord()" class="record_play_button blink-image" src="{{play_button}}" </img>
         <img ng-hide="hide_record_stop_button" ng-click="stopRecord()" class="record_stop_button blink-image" src="{{stop_button}}" </img>
+        <img ng-hide="hide_retry_button" ng-click="retry()" class="retry_button blink-image" src="{{retry_image}}" </img>
         <div class="container">
             <img class="class_board" ng-hide="hide_board_image" src="{{board_image}}" </img>
 
-            <div class="centered" ng-hide="hide_board_image">{{recorded_value | uppercase}}</div>
+            <div class="centered" ng-hide="hide_board_image">{{recorded_value}}</div>
 
         </div>
 
@@ -49,7 +50,7 @@
                     <tr>
                         <th>Image</th>
                         <th>Word</th>
-                        <th width="230">Description</th>
+                        <th width="260">Description</th>
                         <th width="230">Synonyms & Holonyms</th>
                         <th width="230">Examples</th>
                         <th>Rhyming Words</th>

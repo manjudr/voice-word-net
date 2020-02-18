@@ -38,7 +38,7 @@
         }
         
         .recorded_text {
-            font-family: "Segoe UI", Arial, sans-serif;
+            font: 30px/26px Helvetica, Helvetica Neue, Arial;
             font-weight: 400;
             color: black;
             margin: 10px 0;
@@ -354,6 +354,9 @@
             top: 25%;
             left: 50%;
             transform: translate(-50%, -50%);
+            font-family: fantasy;
+            font-size: x-large;
+            font-style: initial;
         }
         
         .container {
@@ -531,4 +534,12 @@
                 /* bottom: -49%; */
                 position: absolute;
             }
+        }
+        
+        .retry_button {
+            width: 6%;
+            float: right;
+            position: absolute;
+            right: 3%;
+            top: 12%;
         }

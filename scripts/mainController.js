@@ -7,6 +7,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
     $scope.stop_button = "./assets/stop-button.png"
     $scope.dikshaImage = "./assets/sunbird_logo.png"
     $scope.board_image = "./assets/blackboard.png"
+    $scope.retry_image = "./assets/retry.png"
     $scope.hide_starting_page = false
     $scope.hide_talking_teacher = true
     $scope.hide_second_teacher = true
@@ -24,6 +25,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
     $scope.prepositions = []
     $scope.antonymsAre = []
     $scope.word_list = []
+    $scope.hide_retry_button = true
     $scope.recorded_value = ""
 
     $scope.search_word_result = []
@@ -42,21 +44,25 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
     $scope.translate_output_subwords = ""
 
 
-    $scope.textToSpeech = function(message) {
+    $scope.textToSpeech = function(message, hideDefaultConfig) {
         var msg = new SpeechSynthesisUtterance();
         var voices = window.speechSynthesis.getVoices();
-        msg.voice = voices[3];
+        msg.voice = voices[48];
         msg.rate = 1
         msg.pitch = 1
         msg.text = message;
         msg.onend = function(e) {
+            //  if (hideDefaultConfig) {
             $scope.hide_talking_teacher = true;
             $scope.hide_record_play_button = false
             $scope.hide_text_area = false
             $scope.hide_board_image = false
             $scope.safeApply()
+                // }
         };
         speechSynthesis.speak(msg);
+
+
     }
 
     $rootScope.safeApply = function(fn) {
@@ -94,9 +100,12 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
     };
 
     $scope.startRecord = function() {
+        $scope.recorded_value = ""
         $scope.hide_wave_image = false
+        $scope.hide_text_area = false
         $scope.hide_record_play_button = true;
         $scope.hide_record_stop_button = false;
+        $scope.hide_board_image = false
         $scope.recognition.continuous = true;
         $scope.recognition.onresult = (event) => {
             for (var i = event.resultIndex; i < event.results.length; ++i) {
@@ -119,7 +128,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
             $scope.translate($scope.recorded_value, function(response) {
                 if (response.response_body != undefined) {
                     $scope.hide_translated_tables = false
-                    $scope.translate_input_subwords = response.response_body[0].input_subwords.replace(/[^\w\s]/gi, '')
+                    $scope.translate_input_subwords = response.response_body[0].input_subwords.replace(/[^\w\s]/gi, "")
                     $scope.translate_output_subwords = response.response_body[0].output_subwords.replace('~[^\p{M}\w]+~u', '');
                     $scope.safeApply()
                 }
@@ -176,7 +185,11 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                             $scope.hide_pre_positions_tables = false
                         }
                         setTimeout(function() {
+                            $scope.explainTable()
+                            $scope.hide_second_teacher = false
+                            $scope.hide_retry_button = false
                             $scope.safeApply()
+
                         }, 1000)
 
                     }, 1000)
@@ -188,7 +201,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
             })
             $scope.hide_record_stop_button = true;
             $scope.hide_record_play_button = true;
-            $scope.hide_second_teacher = false
+            //$scope.hide_second_teacher = false
             $scope.hide_text_area = true
             $scope.hide_board_image = true
             $scope.hide_recorded_text = false
@@ -231,7 +244,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
         $scope.hide_talking_teacher = false
         $scope.hide_board_image = false
         setTimeout(function() {
-            $scope.textToSpeech("hello, how are you")
+            $scope.textToSpeech("hello, how are you", true)
                 // $scope.textToSpeech("Hello!!! Welcome to devcon event!!  Hope you have came here to learn about the antonyms and synonyms, Now I would request you to read something then i will find antonyms and synonyms for you!")
         }, 100)
     }
@@ -336,6 +349,37 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
                 cb("")
             }
         });
+
+    }
+    $scope.explainTable = function() {
+        $scope.hide_second_teacher = false
+        var msg = new SpeechSynthesisUtterance();
+        var voices = window.speechSynthesis.getVoices();
+        msg.voice = voices[48];
+        msg.rate = 1
+        msg.pitch = 1
+        msg.text = "Hey My dear student! I found therese are result for you.";
+        speechSynthesis.speak(msg);
+        msg.onend = function(e) {
+            $scope.hide_second_teacher = true
+            $scope.safeApply()
+        }
+
+    }
+    $scope.retry = function() {
+        console.log("retry")
+        $scope.startRecord()
+        $scope.hide_nouns_tables = true
+        $scope.hide_record_stop_button = true
+        $scope.hide_record_play_button = false
+        $scope.hide_translated_tables = true
+        $scope.hide_wave_image = true
+        $scope.hide_retry_button = true
+        $scope.hide_recorded_text = true
+        $scope.word_list = []
+        $scope.safeApply()
+
+
 
     }
 
