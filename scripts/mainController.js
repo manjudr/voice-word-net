@@ -249,7 +249,7 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
         $scope.hide_board_image = false
         setTimeout(function() {
             //$scope.textToSpeech("hello, how are you", true)
-            $scope.textToSpeech("Hello!!! Welcome to devcon event!!  Hope you have came here to learn about the antonyms and synonyms, Now I would request you to read something then i will find antonyms and synonyms for you!")
+            $scope.textToSpeech("Hello!!! Welcome to devcon event!!  Let's learn about the parts of speech, Now I would request you to read something then i will find words, it's related images, examples and it's meaning for you!")
         }, 100)
     }
 
@@ -355,23 +355,30 @@ app.controller('myCtrl', function($scope, $rootScope, $http) {
         });
 
     }
-    $scope.explainTable = function(message) {
+    $scope.explainTable = function() {
         $scope.hide_second_teacher = false
+        $scope.hide_retry_button = false
         var msg = new SpeechSynthesisUtterance();
         var voices = window.speechSynthesis.getVoices();
         msg.voice = voices[48];
         msg.rate = 1
         msg.pitch = 1
-        var message = message || `Hey My dear student! I found these are the results for you!, The words which i got are ${$scope.nounsAre.toString()}, `;
-        // var elementMessage = $scope.word_list.forEach(element => {
-        //     if (element.meaning != undefined) {
-        //         return message.concat(` The ${element.key} is basically ${element.meaning}`)
-        //     }
+        var message = ""
+        if ($scope.word_list.length > 0) {
+            message = `Hey My dear student! I found these are the results for you!, The words which i got are ${$scope.nounsAre.toString()}, `;
+        } else {
+            message = "I apologize, I couldn't  able to find anything, I request you to please click on the replay button"
+        }
 
-        // })
+
         var elements = $scope.word_list.filter(item => item.meaning != undefined);
         var firstElement = elements[0] ? elements[0] : { key: "", "meaning": "" }
-        msg.text = message.concat(` The ${firstElement.key} is basically ${firstElement.meaning}`)
+
+        if ($scope.word_list.length > 0) {
+            msg.text = message.concat(` The ${firstElement.key} is basically ${firstElement.meaning}`)
+        } else {
+            msg.text = message
+        }
         console.log("mesage" + msg.text)
         speechSynthesis.speak(msg);
         msg.onend = function(e) {
