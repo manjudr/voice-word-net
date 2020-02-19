@@ -5,6 +5,10 @@
         .talking_teacher_main {
             position: absolute;
             left: 40%;
+            -webkit-animation: mymove 1.5s normal ease-in;
+            animation: mymove 1.5s normal ease-in;
+            animation-fill-mode: forwards;
+            -webkit-animation: mymove 1.5s normal ease-in;
         }
         
         .record_play_button {
@@ -542,4 +546,36 @@
             position: absolute;
             right: 3%;
             top: 12%;
+        }
+        
+        .crying_image {
+            float: right;
+            right: 42%;
+            width: 16%;
+            position: absolute;
+            top: 20%;
+        }
+        /* .class {
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: relative;
+            animation: mymove 2s;
+            animation-fill-mode: forwards;
+            -webkit-animation: mymove 2s;
+        } */
+        /* #float {
+            position: relative;
+            -webkit-animation: mymove 2s 1 normal ease-out;
+            animation: mymove 2s 1 normal ease-in;
+            animation-fill-mode: forwards;
+        } */
+        
+        @keyframes mymove {
+            from {
+                top: -1000px;
+            }
+            to {
+                top: 100px;
+            }
         }
